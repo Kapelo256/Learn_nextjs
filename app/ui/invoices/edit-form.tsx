@@ -1,5 +1,6 @@
 'use client';
 
+import { updateInvoice } from '@/app/lib/actions';
 import { CustomerField, InvoiceForm } from '@/app/lib/definitions';
 import {
   CheckIcon,
@@ -17,8 +18,12 @@ export default function EditInvoiceForm({
   invoice: InvoiceForm;
   customers: CustomerField[];
 }) {
+  const initialState = { message: null, errors: {} };
+  const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
+  const [state, formAction] = useActionState(updateInvoiceWithId, initialState);
+
   return (
-    <form>
+    <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Customer Name */}
         <div className="mb-4">
@@ -121,3 +126,7 @@ export default function EditInvoiceForm({
     </form>
   );
 }
+function useActionState(updateInvoiceWithId: (formData: FormData) => Promise<void>, initialState: { message: null; errors: {}; }): [any, any] {
+  throw new Error('Function not implemented.');
+}
+
