@@ -10,6 +10,9 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
+import useActionState from './use-action-state' // Adjust path as needed
+
+
 
 export default function EditInvoiceForm({
   invoice,
@@ -20,10 +23,16 @@ export default function EditInvoiceForm({
 }) {
   const initialState = { message: null, errors: {} };
   const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
-  const [state, formAction] = useActionState(updateInvoiceWithId, initialState);
+  const [state, handleSubmit] = useActionState(updateInvoiceWithId, initialState);
+
+  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    handleSubmit(formData);
+  };
 
   return (
-    <form action={formAction}>
+    <form onSubmit={handleFormSubmit}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Customer Name */}
         <div className="mb-4">
@@ -123,10 +132,8 @@ export default function EditInvoiceForm({
         </Link>
         <Button type="submit">Edit Invoice</Button>
       </div>
+      {state.message && <p>{state.message}</p>}
+      {state.errors && <p>Error updating invoice: {JSON.stringify(state.errors)}</p>}
     </form>
   );
 }
-function useActionState(updateInvoiceWithId: (formData: FormData) => Promise<void>, initialState: { message: null; errors: {}; }): [any, any] {
-  throw new Error('Function not implemented.');
-}
-
